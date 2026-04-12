@@ -148,7 +148,8 @@
   </main>
 
   <script>
-    const N8N_URL = 'https://aungpyae2070.app.n8n.cloud/webhook/a7d644ba-75ec-49a3-88d4-7cccd1f2f133';
+    // UPDATED: Using the Test URL for debugging
+    const N8N_URL = 'https://aungpyae2070.app.n8n.cloud/webhook-test/a7d644ba-75ec-49a3-88d4-7cccd1f2f133';
 
     function showToast(msg) {
       const t = document.getElementById('toast');
@@ -164,8 +165,8 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: "log", medication_name: name, dosage: dose })
         });
-        showToast(`✓ ${name} logged to Supabase!`);
-      } catch (e) { showToast("Error connecting to backend."); }
+        showToast(`✓ ${name} logged! (Check n8n Test Window)`);
+      } catch (e) { showToast("Error connecting to Test Webhook."); }
     }
 
     document.getElementById('log-form').addEventListener('submit', async (e) => {
@@ -174,16 +175,16 @@
       const name = document.getElementById('med-name').value;
       const dose = document.getElementById('dosage').value;
       
-      btn.textContent = 'Saving...';
+      btn.textContent = 'Sending to Test...';
       try {
         await fetch(N8N_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: "log", medication_name: name, dosage: dose })
         });
-        showToast(`✓ ${name} saved successfully!`);
+        showToast(`✓ Sent ${name} to n8n!`);
         document.getElementById('log-form').reset();
-      } catch (e) { showToast("Connection failed."); }
+      } catch (e) { showToast("Connection to Test URL failed."); }
       btn.textContent = 'Log Entry';
     });
 
@@ -218,9 +219,9 @@
         });
         const data = await res.json();
         loading.remove();
-        addMessage(data.output || "I've processed your request.");
+        addMessage(data.output || "Test response received!");
       } catch (e) {
-        loading.textContent = "Connection error.";
+        loading.textContent = "Test Webhook error.";
       }
     };
   </script>
