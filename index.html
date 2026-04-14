@@ -1,85 +1,3 @@
-<!DOCTYPE html>
-<html class="light" lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Guardian – Smart medication companion app for managing your daily health." />
-  <title>Guardian – Smart Companion</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Lexend:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
-
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <script>
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            "primary": "#004a76",
-            "primary-container": "#126398",
-            "secondary": "#2c694e",
-            "surface-container": "#edeeef",
-            "on-surface": "#191c1d",
-            "on-surface-variant": "#40484f",
-            "background": "#f8f9fa",
-          },
-          fontFamily: {
-            headline: ["Plus Jakarta Sans", "sans-serif"],
-            body: ["Lexend", "sans-serif"],
-          },
-        },
-      },
-    };
-  </script>
-
-  <style>
-    :root { --nav-height: 64px; }
-    body { font-family: 'Lexend', sans-serif; background-color: #f8f9fa; }
-    .pulse-ring { animation: pulse-ring 3s ease-in-out infinite; }
-    @keyframes pulse-ring {
-      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(118, 90, 4, 0.4); }
-      50% { transform: scale(1.04); box-shadow: 0 0 0 12px rgba(118, 90, 4, 0); }
-    }
-    .med-input {
-      background-color: #e1e3e4;
-      border: none;
-      border-bottom: 3px solid #c0c7d0;
-      border-radius: 12px 12px 0 0;
-      height: 60px;
-      padding: 0 1.25rem;
-      width: 100%;
-      transition: all 0.2s;
-    }
-    .med-input:focus { outline: none; border-bottom-color: #004a76; background-color: #d5d8da; }
-    textarea.med-input {
-      height: 90px;
-      padding-top: 14px;
-      padding-bottom: 14px;
-      resize: none;
-    }
-    #toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: #004a76;
-      color: #fff;
-      padding: 12px 24px;
-      border-radius: 999px;
-      opacity: 0;
-      transition: all 0.25s;
-      z-index: 9999;
-    }
-    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    .dot-bounce { animation: dot-bounce 1.2s ease infinite; }
-    @keyframes dot-bounce { 0%, 80%, 100% { transform: translateY(0); opacity: 0.4; } 40% { transform: translateY(-6px); opacity: 1; } }
-  </style>
-</head>
-
 <body class="bg-background text-on-surface min-h-screen">
   <div id="toast" role="status"></div>
 
@@ -91,11 +9,6 @@
         </div>
         <span class="text-xl font-extrabold tracking-tight text-primary font-headline">Guardian</span>
       </div>
-      <nav class="hidden md:flex items-center gap-6">
-        <a href="#" class="font-bold text-primary border-bottom-2 border-primary">Home</a>
-        <a href="#" class="text-on-surface-variant hover:text-primary">Meds</a>
-        <a href="#" class="text-on-surface-variant hover:text-primary">Chat</a>
-      </nav>
       <div class="flex items-center gap-2">
         <span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
         <span class="text-sm font-medium">Arthur</span>
@@ -111,42 +24,43 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
       <div class="lg:col-span-7 space-y-6">
-        <article class="bg-white rounded-3xl p-8 flex flex-col sm:flex-row items-center gap-6 shadow-sm border border-gray-100">
-          <div class="pulse-ring w-32 h-32 rounded-full bg-orange-100 flex flex-col items-center justify-center shrink-0">
-            <span class="text-orange-600 text-3xl font-extrabold font-headline" id="pill-ring-count">02</span>
-            <span class="text-orange-600/70 text-[10px] font-bold uppercase">Pills Left</span>
-          </div>
-          <div>
-            <h2 class="text-xl font-bold mb-1">Next Dose</h2>
-            <p class="text-gray-500 mb-4">Lisinopril · 10 mg · 12:00 PM</p>
-            <button onclick="handleTakeDose('Lisinopril', '10mg')" class="px-6 py-2 bg-primary text-white rounded-full font-bold hover:opacity-90 transition-all">Mark Taken</button>
-          </div>
-        </article>
-
+        
         <article class="bg-gray-50 rounded-3xl p-8 border border-gray-200">
           <h3 class="text-xl font-bold mb-6">Log Medication</h3>
           <form id="log-form" class="space-y-4">
             <input id="med-name" class="med-input" placeholder="Medication Name (e.g. Vitamin D3)" required />
             <input id="dosage" class="med-input" placeholder="Dosage (e.g. 1 Tablet)" required />
-            <textarea id="notes" class="med-input" placeholder="Notes (e.g. Take with food, before bed...)"></textarea>
+            <textarea id="notes" class="med-input" placeholder="Notes (e.g. Take with food)"></textarea>
             <button type="submit" id="submit-btn" class="w-full h-14 bg-primary text-white rounded-2xl font-bold shadow-lg hover:bg-primary-container transition-all">
               <span id="btn-label">Log Entry</span>
             </button>
           </form>
         </article>
+
+        <article class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-bold">Recent History</h3>
+            <button onclick="loadHistory()" class="text-primary text-sm font-bold flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">refresh</span> Refresh
+            </button>
+          </div>
+          <div id="history-list" class="space-y-4">
+            <p class="text-gray-400 italic text-sm text-center">Loading history...</p>
+          </div>
+        </article>
       </div>
 
       <div class="lg:col-span-5">
-        <article class="bg-white rounded-3xl flex flex-col shadow-sm border border-gray-100 h-[500px]">
+        <article class="bg-white rounded-3xl flex flex-col shadow-sm border border-gray-100 h-[600px]">
           <div class="p-5 border-b flex items-center gap-3">
             <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center"><span class="material-symbols-outlined text-primary text-sm">smart_toy</span></div>
             <span class="font-bold">Guardian Assistant</span>
           </div>
           <div id="chat-messages" class="flex-grow overflow-y-auto p-5 space-y-4 text-sm">
-            <div class="bg-gray-100 p-3 rounded-2xl rounded-tl-none max-w-[85%]">Hello Arthur! I'm here to help with your medication safety. How can I assist you today?</div>
+            <div class="bg-gray-100 p-3 rounded-2xl rounded-tl-none max-w-[85%]">Hello Arthur! How can I help with your meds today?</div>
           </div>
           <div class="p-4 border-t flex gap-2">
-            <input id="chat-input" class="flex-grow bg-gray-50 rounded-xl px-4 h-12 focus:outline-none focus:ring-2 focus:ring-primary/20" placeholder="Ask a question..." />
+            <input id="chat-input" class="flex-grow bg-gray-50 rounded-xl px-4 h-12 focus:outline-none" placeholder="Ask a question..." />
             <button id="send-btn" class="w-12 h-12 bg-primary text-white rounded-xl flex items-center justify-center"><span class="material-symbols-outlined">send</span></button>
           </div>
         </article>
@@ -157,44 +71,74 @@
   <script>
     const N8N_URL = 'https://aungpyae2070.app.n8n.cloud/webhook-test/a7d644ba-75ec-49a3-88d4-7cccd1f2f133';
 
+    // 1. SHOW TOAST
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg; t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), 3000);
     }
 
-    async function handleTakeDose(name, dose) {
-      showToast(`Logging ${name}...`);
+    // 2. LOAD HISTORY FROM N8N/SUPABASE
+    async function loadHistory() {
+      const list = document.getElementById('history-list');
       try {
-        await fetch(N8N_URL, {
+        const res = await fetch(N8N_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: "log", medication_name: name, dosage: dose })
+          body: JSON.stringify({ action: "fetch_history" })
         });
-        showToast(`✓ ${name} logged! (Check n8n Test Window)`);
-      } catch (e) { showToast("Error connecting to Test Webhook."); }
+        const data = await res.json();
+        
+        // Ensure data is an array (adjust based on your n8n output)
+        const history = data.history || [];
+        list.innerHTML = history.length ? '' : '<p class="text-gray-400 text-sm">No recent logs found.</p>';
+        
+        history.slice(0, 5).forEach(item => {
+          const div = document.createElement('div');
+          div.className = "flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100";
+          div.innerHTML = `
+            <div class="w-10 h-10 bg-primary/10 text-primary rounded-full flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined">pill</span>
+            </div>
+            <div class="flex-grow">
+              <p class="font-bold text-sm">${item.medication_name}</p>
+              <p class="text-xs text-gray-500">${item.dosage} • ${new Date(item.taken_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
+            </div>
+            ${item.notes ? `<span class="material-symbols-outlined text-gray-300" title="${item.notes}">info</span>` : ''}
+          `;
+          list.appendChild(div);
+        });
+      } catch (e) {
+        list.innerHTML = '<p class="text-red-400 text-sm">Could not load history.</p>';
+      }
     }
 
+    // 3. LOG MEDICATION
     document.getElementById('log-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = document.getElementById('btn-label');
-      const name = document.getElementById('med-name').value;
-      const dose = document.getElementById('dosage').value;
-      const notes = document.getElementById('notes').value;
+      const payload = {
+        action: "log",
+        medication_name: document.getElementById('med-name').value,
+        dosage: document.getElementById('dosage').value,
+        notes: document.getElementById('notes').value
+      };
 
-      btn.textContent = 'Sending to Test...';
+      btn.textContent = 'Logging...';
       try {
         await fetch(N8N_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: "log", medication_name: name, dosage: dose, notes: notes })
+          body: JSON.stringify(payload)
         });
-        showToast(`✓ Sent ${name} to n8n!`);
+        showToast(`✓ Logged ${payload.medication_name}`);
         document.getElementById('log-form').reset();
-      } catch (e) { showToast("Connection to Test URL failed."); }
+        loadHistory(); // Refresh the board
+      } catch (e) { showToast("Error logging."); }
       btn.textContent = 'Log Entry';
     });
 
+    // 4. AI CHAT (Existing logic)
     const chatMessages = document.getElementById('chat-messages');
     const chatInput = document.getElementById('chat-input');
     const sendBtn = document.getElementById('send-btn');
@@ -210,10 +154,8 @@
     sendBtn.onclick = async () => {
       const text = chatInput.value.trim();
       if (!text) return;
-
       addMessage(text, true);
       chatInput.value = '';
-
       const loading = document.createElement('div');
       loading.className = "text-gray-400 text-xs italic"; loading.textContent = "Guardian is thinking...";
       chatMessages.appendChild(loading);
@@ -226,11 +168,11 @@
         });
         const data = await res.json();
         loading.remove();
-        addMessage(data.output || "Test response received!");
-      } catch (e) {
-        loading.textContent = "Test Webhook error.";
-      }
+        addMessage(data.output || "I'm having trouble responding right now.");
+      } catch (e) { loading.textContent = "Error."; }
     };
+
+    // Load history on startup
+    window.onload = loadHistory;
   </script>
 </body>
-</html>
