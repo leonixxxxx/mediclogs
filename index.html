@@ -127,7 +127,7 @@
             </button>
           </div>
           <div id="history-list" class="space-y-4">
-            <p class="text-gray-400 italic text-sm text-center">Loading history...</p>
+            <p class="text-gray-400 italic text-sm text-center">No activity recorded yet.</p>
           </div>
         </article>
       </div>
@@ -155,7 +155,8 @@
   </main>
 
   <script>
-    const N8N_URL = 'https://aungpyae2070.app.n8n.cloud/webhook-test/a7d644ba-75ec-49a3-88d4-7cccd1f2f133';
+    // PRODUCTION URL
+    const N8N_URL = 'https://aungpyae2070.app.n8n.cloud/webhook/a7d644ba-75ec-49a3-88d4-7cccd1f2f133';
 
     function showToast(msg) {
       const t = document.getElementById('toast');
@@ -163,8 +164,11 @@
       setTimeout(() => t.classList.remove('show'), 3000);
     }
 
+    // LOAD HISTORY FUNCTION
     async function loadHistory() {
       const list = document.getElementById('history-list');
+      list.innerHTML = '<p class="text-gray-400 italic text-sm text-center">Fetching history...</p>';
+      
       try {
         const res = await fetch(N8N_URL, {
           method: 'POST',
@@ -173,7 +177,8 @@
         });
         const data = await res.json();
         const history = data.history || [];
-        list.innerHTML = history.length ? '' : '<p class="text-gray-400 text-sm text-center">No recent logs found.</p>';
+        
+        list.innerHTML = history.length ? '' : '<p class="text-gray-400 text-sm text-center">No records found in database.</p>';
 
         history.slice(0, 5).forEach(item => {
           const div = document.createElement('div');
@@ -191,13 +196,14 @@
           list.appendChild(div);
         });
       } catch (e) {
-        list.innerHTML = '<p class="text-red-400 text-sm text-center">Could not load history.</p>';
+        list.innerHTML = '<p class="text-red-400 text-sm text-center">Unable to connect to Guardian server.</p>';
       }
     }
 
+    // LOG MEDICATION HANDLER
     document.getElementById('log-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const btn = document.getElementById('btn-label');
+      const btnLabel = document.getElementById('btn-label');
       const payload = {
         action: "log",
         medication_name: document.getElementById('med-name').value,
@@ -205,7 +211,7 @@
         notes: document.getElementById('notes').value
       };
 
-      btn.textContent = 'Logging...';
+      btnLabel.textContent = 'Logging...';
       try {
         await fetch(N8N_URL, {
           method: 'POST',
@@ -214,11 +220,16 @@
         });
         showToast(`✓ Logged ${payload.medication_name}`);
         document.getElementById('log-form').reset();
-        loadHistory();
-      } catch (e) { showToast("Error logging."); }
-      btn.textContent = 'Log Entry';
+        
+        // We call loadHistory here so the UI updates immediately after a log
+        loadHistory(); 
+      } catch (e) { 
+        showToast("Logging failed. Check connection."); 
+      }
+      btnLabel.textContent = 'Log Entry';
     });
 
+    // CHAT ASSISTANT HANDLER
     const chatMessages = document.getElementById('chat-messages');
     const chatInput = document.getElementById('chat-input');
     const sendBtn = document.getElementById('send-btn');
@@ -238,8 +249,9 @@
       if (!text) return;
       addMessage(text, true);
       chatInput.value = '';
+      
       const loading = document.createElement('div');
-      loading.className = "text-gray-400 text-xs italic";
+      loading.className = "text-gray-400 text-xs italic p-2";
       loading.textContent = "Guardian is thinking...";
       chatMessages.appendChild(loading);
 
@@ -252,14 +264,17 @@
         const data = await res.json();
         loading.remove();
         addMessage(data.output || "I'm having trouble responding right now.");
-      } catch (e) { loading.textContent = "Error."; }
+      } catch (e) { 
+        loading.textContent = "Guardian is currently offline."; 
+      }
     };
 
     chatInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') sendBtn.onclick();
     });
 
-    window.onload = loadHistory;
+    // AUTOMATIC FETCH IS DISABLED FOR THE DEMO
+    // window.onload = loadHistory; 
   </script>
 </body>
 </html>
