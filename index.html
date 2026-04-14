@@ -55,6 +55,12 @@
       transition: all 0.2s;
     }
     .med-input:focus { outline: none; border-bottom-color: #004a76; background-color: #d5d8da; }
+    textarea.med-input {
+      height: 90px;
+      padding-top: 14px;
+      padding-bottom: 14px;
+      resize: none;
+    }
     #toast {
       position: fixed;
       bottom: 24px;
@@ -122,6 +128,7 @@
           <form id="log-form" class="space-y-4">
             <input id="med-name" class="med-input" placeholder="Medication Name (e.g. Vitamin D3)" required />
             <input id="dosage" class="med-input" placeholder="Dosage (e.g. 1 Tablet)" required />
+            <textarea id="notes" class="med-input" placeholder="Notes (e.g. Take with food, before bed...)"></textarea>
             <button type="submit" id="submit-btn" class="w-full h-14 bg-primary text-white rounded-2xl font-bold shadow-lg hover:bg-primary-container transition-all">
               <span id="btn-label">Log Entry</span>
             </button>
@@ -148,7 +155,6 @@
   </main>
 
   <script>
-    // UPDATED: Using the Test URL for debugging
     const N8N_URL = 'https://aungpyae2070.app.n8n.cloud/webhook-test/a7d644ba-75ec-49a3-88d4-7cccd1f2f133';
 
     function showToast(msg) {
@@ -174,13 +180,14 @@
       const btn = document.getElementById('btn-label');
       const name = document.getElementById('med-name').value;
       const dose = document.getElementById('dosage').value;
-      
+      const notes = document.getElementById('notes').value;
+
       btn.textContent = 'Sending to Test...';
       try {
         await fetch(N8N_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: "log", medication_name: name, dosage: dose })
+          body: JSON.stringify({ action: "log", medication_name: name, dosage: dose, notes: notes })
         });
         showToast(`✓ Sent ${name} to n8n!`);
         document.getElementById('log-form').reset();
@@ -203,10 +210,10 @@
     sendBtn.onclick = async () => {
       const text = chatInput.value.trim();
       if (!text) return;
-      
+
       addMessage(text, true);
       chatInput.value = '';
-      
+
       const loading = document.createElement('div');
       loading.className = "text-gray-400 text-xs italic"; loading.textContent = "Guardian is thinking...";
       chatMessages.appendChild(loading);
